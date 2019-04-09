@@ -8,7 +8,6 @@ import styled from "styled-components";
 const Navbar = class extends React.Component {
 
   render() {
-    const key = window.location.pathname.split("/")[1];
 
     return (
       <nav
@@ -23,22 +22,16 @@ const Navbar = class extends React.Component {
           </Box>
 
           <Box mr="12px">
-            <HeaderMenu mode="horizontal" selectedKeys={[key]}>
-              <Menu.Item key="about">
-                <Link to="/about">About</Link>
+            <HeaderMenu mode="horizontal">
+              <Menu.Item key="home">
+                <Link to="/">Home</Link>
               </Menu.Item>
-              {/*<Menu.Item key="products">
-                <Link to="/products">Products</Link>
-              </Menu.Item>*/}
               <Menu.Item key="blog">
                 <Link to="/blog">Blog</Link>
               </Menu.Item>
-              {/*<Menu.Item key="contact">
-                <Link to="/contact">Contact</Link>
-              </Menu.Item>*/}
-              {/*<Menu.Item key="contact/examples">
-              <Link to="/contact/examples">Form Examples</Link>
-            </Menu.Item>*/}
+              <Menu.Item key="about">
+                <Link to="/about">About</Link>
+              </Menu.Item>
             </HeaderMenu>
           </Box>
         </Header>

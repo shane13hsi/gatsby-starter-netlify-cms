@@ -5,7 +5,7 @@ import Navbar from '../components/Navbar'
 import './all.sass'
 import useSiteMetadata from './SiteMetadata'
 
-const TemplateWrapper = ({ children }) => {
+const TemplateWrapper = ({ location, children }) => {
   const { title, description } = useSiteMetadata()
   return (
     <div>
