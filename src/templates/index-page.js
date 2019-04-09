@@ -16,7 +16,7 @@ export const IndexPageTemplate = ({
                                     description,
                                     intro
                                   }) => (
-  <Flex justifyContent={"center"} m={"48px"}>
+  <Flex justifyContent={"center"} style={{ margin: 48 }}>
 
     <Box width={2 / 3}>
       <Title>
