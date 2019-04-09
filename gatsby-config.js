@@ -10,10 +10,21 @@ module.exports = {
     'gatsby-plugin-react-helmet',
     'gatsby-plugin-sass',
     {
+      resolve: `gatsby-plugin-less`,
+      options: {
+        javascriptEnabled: true,
+        modifyVars: {
+          "@primary-color": "#60acbc",
+          "@border-radius-base": "2px",
+          "@font-size-base ": "12px"
+        },
+      },
+    },
+    {
       resolve: 'gatsby-plugin-import',
       options: {
         libraryName: "antd",
-        style: 'css',   // or 'css'
+        style: true,   // or 'css'
       }
     },
     {

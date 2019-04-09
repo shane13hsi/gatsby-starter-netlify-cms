@@ -83,7 +83,7 @@ const Footer = class extends React.Component {
 
 const FooterWrapper = styled.footer`// styled
   & {
-    background: RGBA(96, 172, 188, 1.00) !important;
+    background: #60acbc !important;
 
     padding: 3rem 0rem 3rem;
   }

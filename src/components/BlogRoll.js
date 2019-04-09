@@ -1,23 +1,25 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Link, graphql, StaticQuery } from 'gatsby'
+import React from "react";
+import PropTypes from "prop-types";
+import { graphql, Link, StaticQuery } from "gatsby";
+import { Box, Flex } from "grid-styled";
+import { Button, Card } from "antd";
 
 class BlogRoll extends React.Component {
   render() {
-    const { data } = this.props
-    const { edges: posts } = data.allMarkdownRemark
+    const { data } = this.props;
+    const { edges: posts } = data.allMarkdownRemark;
 
     return (
-      <div className="columns is-multiline">
+      <Flex flexWrap={"wrap"} mx={"-12px"}>
         {posts &&
-          posts.map(({ node: post }) => (
-            <div className="is-parent column is-6" key={post.id}>
-              <article className="tile is-child box notification">
+        posts.map(({ node: post }) => (
+          <Box key={post.id} width={1 / 2} px={"12px"} mb={"24px"}>
+            <Card style={{ minHeight: 335 }}>
+              <article>
                 <p>
                   <Link
                     className="title has-text-primary is-size-4"
-                    to={post.fields.slug}
-                  >
+                    to={post.fields.slug}>
                     {post.frontmatter.title}
                   </Link>
                   <span> &bull; </span>
@@ -27,27 +29,30 @@ class BlogRoll extends React.Component {
                 </p>
                 <p>
                   {post.excerpt}
-                  <br />
-                  <br />
-                  <Link className="button" to={post.fields.slug}>
-                    Keep Reading →
-                  </Link>
+                  <br/>
+                  <br/>
+                  <Button>
+                    <Link to={post.fields.slug}>
+                      Keep Reading →
+                    </Link>
+                  </Button>
                 </p>
               </article>
-            </div>
-          ))}
-      </div>
-    )
+            </Card>
+          </Box>
+        ))}
+      </Flex>
+    );
   }
 }
 
 BlogRoll.propTypes = {
   data: PropTypes.shape({
     allMarkdownRemark: PropTypes.shape({
-      edges: PropTypes.array,
-    }),
-  }),
-}
+      edges: PropTypes.array
+    })
+  })
+};
 
 export default () => (
   <StaticQuery
@@ -74,6 +79,6 @@ export default () => (
         }
       }
     `}
-    render={(data, count) => <BlogRoll data={data} count={count} />}
+    render={(data, count) => <BlogRoll data={data} count={count}/>}
   />
 )
