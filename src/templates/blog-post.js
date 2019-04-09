@@ -5,6 +5,8 @@ import Helmet from 'react-helmet'
 import { graphql, Link } from 'gatsby'
 import Layout from '../components/Layout'
 import Content, { HTMLContent } from '../components/Content'
+import { Tag } from 'antd';
+import { Flex, Box } from 'grid-styled';
 
 export const BlogPostTemplate = ({
   content,
@@ -30,13 +32,17 @@ export const BlogPostTemplate = ({
             {tags && tags.length ? (
               <div style={{ marginTop: `4rem` }}>
                 <h4>Tags</h4>
-                <ul className="taglist">
+                <Flex>
                   {tags.map(tag => (
-                    <li key={tag + `tag`}>
-                      <Link to={`/tags/${kebabCase(tag)}/`}>{tag}</Link>
-                    </li>
+                    <Box key={tag + `tag`}>
+                      <Link to={`/tags/${kebabCase(tag)}/`}>
+                        <Tag>
+                          {tag}
+                        </Tag>
+                      </Link>
+                    </Box>
                   ))}
-                </ul>
+                </Flex>
               </div>
             ) : null}
           </div>
