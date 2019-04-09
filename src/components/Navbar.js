@@ -51,6 +51,10 @@ const HeaderMenu = styled(Menu)`// styled
     .ant-menu-item > a {
       line-height: 62px;
     }
+
+    &.ant-menu-horizontal {
+      border-bottom: none;
+    }
   }
 `;
 

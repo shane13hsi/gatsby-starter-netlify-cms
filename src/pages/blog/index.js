@@ -1,20 +1,19 @@
-import React from 'react'
+import React from "react";
 
-import Layout from '../../components/Layout'
-import BlogRoll from '../../components/BlogRoll'
+import Layout from "../../components/Layout";
+import BlogRoll from "../../components/BlogRoll";
+import { Box, Flex } from "grid-styled";
 
 export default class BlogIndexPage extends React.Component {
   render() {
     return (
       <Layout>
-        <section className="section">
-          <div className="container">
-            <div className="content">
-              <BlogRoll />
-            </div>
-          </div>
-        </section>
+        <Flex justifyContent={"center"} style={{ margin: "48px 24px" }}>
+          <Box width={10 / 12}>
+            <BlogRoll/>
+          </Box>
+        </Flex>
       </Layout>
-    )
+    );
   }
 }

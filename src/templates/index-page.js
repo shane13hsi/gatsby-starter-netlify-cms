@@ -18,7 +18,7 @@ export const IndexPageTemplate = ({
                                   }) => (
   <Flex justifyContent={"center"} style={{ margin: 48 }}>
 
-    <Box width={2 / 3}>
+    <Box width={4 / 5}>
       <Title>
         Latest stories
       </Title>

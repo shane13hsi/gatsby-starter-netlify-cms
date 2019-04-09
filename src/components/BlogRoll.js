@@ -2,8 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { graphql, Link, StaticQuery } from "gatsby";
 import { Box, Flex } from "grid-styled";
-import { Button, Card } from "antd";
+import { Button, Card, Typography } from "antd";
 import styled from "styled-components";
+
+const { Title, Paragraph, Text } = Typography;
 
 class BlogRoll extends React.Component {
   render() {
@@ -15,20 +17,20 @@ class BlogRoll extends React.Component {
         {posts &&
         posts.map(({ node: post }) => (
           <Box key={post.id} width={1 / 2} px={"12px"} mb={"24px"}>
-            <Card style={{ minHeight: 335 }}>
+            <Card style={{ minHeight: 345 }}>
               <article>
                 <p>
                   <Link
-                    className="title has-text-primary is-size-4"
                     to={post.fields.slug}>
-                    {post.frontmatter.title}
+                    <Title level={4}>
+                      {post.frontmatter.title}
+                    </Title>
                   </Link>
-                  <span> &bull; </span>
-                  <span className="subtitle is-size-5 is-block">
+                  <Text>
                     {post.frontmatter.date}
-                  </span>
+                  </Text>
                 </p>
-                <p>
+                <Paragraph>
                   {post.excerpt}
                   <br/>
                   <br/>
@@ -37,7 +39,7 @@ class BlogRoll extends React.Component {
                       Keep Reading →
                     </Link>
                   </Button>
-                </p>
+                </Paragraph>
               </article>
             </Card>
           </Box>
