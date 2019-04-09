@@ -16,7 +16,6 @@ module.exports = {
         modifyVars: {
           "@primary-color": "#60acbc",
           "@border-radius-base": "2px",
-          "@font-size-base ": "12px"
         },
       },
     },
