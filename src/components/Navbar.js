@@ -27,15 +27,15 @@ const Navbar = class extends React.Component {
               <Menu.Item key="about">
                 <Link to="/about">About</Link>
               </Menu.Item>
-              <Menu.Item key="products">
+              {/*<Menu.Item key="products">
                 <Link to="/products">Products</Link>
-              </Menu.Item>
+              </Menu.Item>*/}
               <Menu.Item key="blog">
                 <Link to="/blog">Blog</Link>
               </Menu.Item>
-              <Menu.Item key="contact">
+              {/*<Menu.Item key="contact">
                 <Link to="/contact">Contact</Link>
-              </Menu.Item>
+              </Menu.Item>*/}
               {/*<Menu.Item key="contact/examples">
               <Link to="/contact/examples">Form Examples</Link>
             </Menu.Item>*/}
