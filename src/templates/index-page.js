@@ -119,7 +119,7 @@ const Title = styled(Box)`// styled
   & {
     box-sizing: border-box;
     margin-bottom: 18px;
-    font-size: 26px;
+    font-size: 32px;
     font-weight: 500;
   }
 `;
