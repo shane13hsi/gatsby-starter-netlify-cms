@@ -23,7 +23,7 @@ const TagsPage = ({
         <Title level={2}>Tags</Title>
         <Flex>
           {group.map(tag => (
-            <Box key={tag.fieldValue} mr={"24px"}>
+            <Box key={tag.fieldValue} mr={"22px"} mb={"12px"}>
               <Link to={`/tags/${kebabCase(tag.fieldValue)}/`}>
                 <Badge count={tag.totalCount}>
                   <Tag>{tag.fieldValue}</Tag>
