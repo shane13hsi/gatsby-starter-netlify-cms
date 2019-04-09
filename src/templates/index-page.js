@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { graphql, Link } from "gatsby";
-
 import Layout from "../components/Layout";
 import BlogRoll from "../components/BlogRoll";
 import { Button } from "antd";
-import { Flex } from "grid-styled";
+import { Box, Flex } from "grid-styled";
+import styled from "styled-components";
 
 export const IndexPageTemplate = ({
                                     image,
@@ -16,34 +16,25 @@ export const IndexPageTemplate = ({
                                     description,
                                     intro
                                   }) => (
-  <div>
-    <section className="section section--gradient">
-      <div className="container">
-        <div className="section">
-          <div className="columns">
-            <div className="column is-10 is-offset-1">
-              <div className="content">
+  <Flex justifyContent={"center"} m={"48px"}>
 
-                <div className="column is-12">
-                  <h3 className="has-text-weight-semibold is-size-2">
-                    Latest stories
-                  </h3>
-                  <BlogRoll/>
-                  <Flex mt={"48px"} justifyContent={"center"}>
-                    <Button>
-                      <Link to="/blog">
-                        Read more
-                      </Link>
-                    </Button>
-                  </Flex>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
+    <Box width={2 / 3}>
+      <Title>
+        Latest stories
+      </Title>
+
+      <BlogRoll/>
+
+      <Flex mt={"48px"} justifyContent={"center"}>
+        <Button>
+          <Link to="/blog">
+            Read more
+          </Link>
+        </Button>
+      </Flex>
+    </Box>
+
+  </Flex>
 );
 
 IndexPageTemplate.propTypes = {
@@ -121,5 +112,14 @@ export const pageQuery = graphql`
         }
       }
     }
+  }
+`;
+
+const Title = styled(Box)`// styled
+  & {
+    box-sizing: border-box;
+    margin-bottom: 18px;
+    font-size: 26px;
+    font-weight: 500;
   }
 `;

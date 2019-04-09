@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { graphql, Link, StaticQuery } from "gatsby";
 import { Box, Flex } from "grid-styled";
 import { Button, Card } from "antd";
+import styled from "styled-components";
 
 class BlogRoll extends React.Component {
   render() {
@@ -10,7 +11,7 @@ class BlogRoll extends React.Component {
     const { edges: posts } = data.allMarkdownRemark;
 
     return (
-      <Flex flexWrap={"wrap"} mx={"-12px"}>
+      <BlogRollWrapper>
         {posts &&
         posts.map(({ node: post }) => (
           <Box key={post.id} width={1 / 2} px={"12px"} mb={"24px"}>
@@ -41,7 +42,7 @@ class BlogRoll extends React.Component {
             </Card>
           </Box>
         ))}
-      </Flex>
+      </BlogRollWrapper>
     );
   }
 }
@@ -82,3 +83,11 @@ export default () => (
     render={(data, count) => <BlogRoll data={data} count={count}/>}
   />
 )
+
+const BlogRollWrapper = styled(Flex)`// styled
+  & {
+    margin-left: -12px !important;
+    margin-right: -12px !important;
+    flex-wrap: wrap;
+  }
+`;
