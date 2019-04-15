@@ -2,7 +2,10 @@
 templateKey: blog-post
 title: Try ndb to debug with chrome devtool
 date: 2019-04-15T07:43:41.467Z
-description: Simple guide to use ndb
+description: |-
+  Simple guide to use ndb.
+
+  Attention: ndb perf .
 tags:
   - nodejs
   - debug
