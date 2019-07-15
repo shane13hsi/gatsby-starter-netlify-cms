@@ -6,6 +6,6 @@ title: 关于我 About Me
 
 A husband, a father. Living in Shanghai currently.
 
-职业是前端程序员。
+职业是前端程序员（大多数工作内容）。
 
-Occupied as a Frontend programmer.
+Occupied as a Frontend programmer mostly.
