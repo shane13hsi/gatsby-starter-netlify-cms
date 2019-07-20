@@ -49,7 +49,7 @@ exports.createPages = ({ actions, graphql }) => {
         });
       } else {
         createPage({
-          path: edge.node.fields.slug,
+          path: "/notable",
           component: path.resolve(
             `src/templates/notable.tsx`
           ),
