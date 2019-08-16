@@ -33,34 +33,26 @@ exports.createPages = ({ actions, graphql }) => {
 
     posts.forEach(edge => {
       const id = edge.node.id;
-      const templateKey = edge.node.frontmatter.templateKey;
 
-      if (edge.node.frontmatter.templateKey) {
-        createPage({
-          path: edge.node.fields.slug,
-          tags: edge.node.frontmatter.tags,
-          component: path.resolve(
-            `src/templates/${String(edge.node.frontmatter.templateKey)}.js`
-          ),
-          // additional data can be passed via context
-          context: {
-            id
-          }
-        });
-      } else {
-        createPage({
-          path: "/notable",
-          component: path.resolve(
-            `src/templates/notable.js`
-          ),
-          // additional data can be passed via context
-          context: {
-            id
-          }
-        });
+      // 创建具体博客页面
+      createPage({
+        path: edge.node.fields.slug,
+        tags: edge.node.frontmatter.tags,
+        component: path.resolve(`src/templates/notable.js`),
+        context: {
+          id
+        }
+      });
+
+    });
+
+    // 创建默认首页
+    createPage({
+      path: "/notable",
+      component: path.resolve(`src/templates/notable.js`),
+      context: {
+        id: posts[0].node.id
       }
-
-
     });
 
     // Tag pages:

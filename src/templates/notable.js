@@ -2,20 +2,65 @@ import * as React from "react";
 import SplitPane from "react-split-pane";
 import styled from "styled-components";
 import { Box } from "grid-styled";
-import NodeDirectoryTree from "../components/notableDirectoryTree";
+import NotableDirectoryTree from "../components/notableDirectoryTree";
+import { HTMLContent } from "../components/Content";
+import Helmet from "react-helmet";
+import { BlogPostTemplate } from "./blog-post";
+import { graphql } from "gatsby";
+import PropTypes from "prop-types";
 
 const Notable = (props) => {
+  const { markdownRemark: post } = props.data;
+
   return <Wrapper>
     <SplitPane split="vertical" minSize={300}>
       <Box m={"12px 18px"}>
-        <NodeDirectoryTree/>
+        <NotableDirectoryTree {...props}/>
       </Box>
-      <div>content</div>
+      <Box>
+        <BlogPostTemplate
+          content={post.html}
+          contentComponent={HTMLContent}
+          description={post.frontmatter.description}
+          helmet={
+            <Helmet titleTemplate="%s | Blog">
+              <title>{`${post.frontmatter.title}`}</title>
+              <meta
+                name="description"
+                content={`${post.frontmatter.description}`}
+              />
+            </Helmet>
+          }
+          tags={post.frontmatter.tags}
+          title={post.frontmatter.title}
+        />
+      </Box>
     </SplitPane>
   </Wrapper>;
 };
 
+Notable.propTypes = {
+  data: PropTypes.shape({
+    markdownRemark: PropTypes.object
+  })
+};
+
 export default Notable;
+
+export const pageQuery = graphql`
+  query NotableByID($id: String!) {
+    markdownRemark(id: { eq: $id }) {
+      id
+      html
+      frontmatter {
+        date(formatString: "MMMM DD, YYYY")
+        title
+        description
+        tags
+      }
+    }
+  }
+`;
 
 const Wrapper = styled.div`// styled
   & {
