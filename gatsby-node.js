@@ -51,7 +51,7 @@ exports.createPages = ({ actions, graphql }) => {
         createPage({
           path: "/notable",
           component: path.resolve(
-            `src/templates/notable.tsx`
+            `src/templates/notable.js`
           ),
           // additional data can be passed via context
           context: {
