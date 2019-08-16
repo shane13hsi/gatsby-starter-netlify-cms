@@ -2,7 +2,7 @@ import * as React from "react";
 import SplitPane from "react-split-pane";
 import styled from "styled-components";
 import { Box } from "grid-styled";
-import NotableDirectoryTree from "../components/notableDirectoryTree";
+import NotableDirectoryTree from "../components/NotableDirectoryTree";
 import { HTMLContent } from "../components/Content";
 import Helmet from "react-helmet";
 import { BlogPostTemplate } from "./blog-post";
