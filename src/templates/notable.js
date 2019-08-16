@@ -10,10 +10,7 @@ const Notable = (props) => {
       <Box m={"12px 18px"}>
         <NodeDirectoryTree/>
       </Box>
-      <SplitPane split="vertical" minSize={300}>
-        <div>2</div>
-        <div>3</div>
-      </SplitPane>
+      <div>content</div>
     </SplitPane>
   </Wrapper>;
 };
