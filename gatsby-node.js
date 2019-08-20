@@ -45,15 +45,6 @@ exports.createPages = ({ actions, graphql }) => {
       });
     });
 
-    // 创建默认首页
-    createPage({
-      path: "/notable",
-      component: path.resolve(`src/templates/notable.js`),
-      context: {
-        id: posts[0].node.id
-      }
-    });
-
     // Tag pages:
     let tags = [];
     // Iterate through each post, putting all found tags into `tags`

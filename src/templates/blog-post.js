@@ -63,6 +63,9 @@ BlogPostTemplate.propTypes = {
 
 const BlogPost = (props) => {
   const { markdownRemark: post } = props.data;
+  if (post == null) {
+    return null;
+  }
 
   return (
     <Layout>
