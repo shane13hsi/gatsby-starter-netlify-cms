@@ -14,7 +14,10 @@ const Notable = (props) => {
   return <Wrapper>
     <SplitPane split="vertical" defaultSize={500} minSize={500} maxSize={600}>
       <NotableDirectoryTree {...props}/>
-      <Box>
+      <Box style={{
+        height: "100vh",
+        overflow: "auto"
+      }}>
         <BlogPostTemplate
           content={post.html}
           contentComponent={HTMLContent}
