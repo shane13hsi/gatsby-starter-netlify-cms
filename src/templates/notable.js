@@ -12,7 +12,7 @@ const Notable = (props) => {
   const { markdownRemark: post } = props.data;
 
   return <Wrapper>
-    <SplitPane split="vertical" minSize={500}>
+    <SplitPane split="vertical" defaultSize={500} minSize={500} maxSize={600}>
       <NotableDirectoryTree {...props}/>
       <Box>
         <BlogPostTemplate

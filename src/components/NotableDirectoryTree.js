@@ -56,9 +56,13 @@ const NotableDirectoryTree = (props) => {
   }
 
   return (
-    <SplitPane split="vertical" minSize={250} pane1Style={{
-      background: "#20262B"
-    }}>
+    <SplitPane split="vertical"
+               defaultSize={250}
+               minSize={200}
+               maxSize={300}
+               pane1Style={{
+                 background: "#20262B"
+               }}>
       <TreeBoxWrapper m={"12px 18px"}>
         <Tree
           showIcon={true}
