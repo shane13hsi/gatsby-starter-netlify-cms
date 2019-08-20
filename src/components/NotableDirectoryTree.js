@@ -1,9 +1,11 @@
 import * as React from "react";
 import { Tree } from "antd";
-import { graphql, StaticQuery } from "gatsby";
+import { graphql, Link, StaticQuery } from "gatsby";
 import _ from "lodash";
 import { navigate } from "@reach/router";
 import { parse } from "query-string";
+import { Box } from "grid-styled";
+import SplitPane from "react-split-pane";
 
 const { TreeNode } = Tree;
 
@@ -49,32 +51,48 @@ const NotableDirectoryTree = (props) => {
   }
 
   return (
-    <Tree showLine
-          onSelect={(selectedKeys) => {
-            const sks = _.filter(selectedKeys, item => !_.includes(item, "blog"));
-            const query = new URLSearchParams(location.search);
-            if (_.isEmpty(sks)) {
-              query.delete("sk");
-            } else {
-              query.set("sk", sks[0]);
-            }
-            navigate(location.pathname + "?" + query.toString());
-          }}
-          onExpand={(expandedKeys) => {
-            const eks = _.filter(expandedKeys, item => !_.includes(item, "blog"));
-            const query = new URLSearchParams(location.search);
-            if (_.isEmpty(eks)) {
-              query.delete("ek");
-            } else {
-              query.set("ek", eks.join("-"));
-            }
-            navigate(location.pathname + "?" + query.toString());
-          }}
-          expandedKeys={expandedKeys}
-          defaultExpandParent={true}
-    >
-      {recurTreeNodeRender(treeJson.children)}
-    </Tree>
+    <SplitPane split="vertical" minSize={250}>
+      <Box m={"12px 18px"}>
+        <Tree showLine
+              onSelect={(selectedKeys) => {
+                const sks = _.filter(selectedKeys, item => !_.includes(item, "blog"));
+                const query = new URLSearchParams(location.search);
+                if (_.isEmpty(sks)) {
+                  query.delete("sk");
+                } else {
+                  query.set("sk", sks[0]);
+                }
+                navigate(location.pathname + "?" + query.toString());
+              }}
+              onExpand={(expandedKeys) => {
+                const eks = _.filter(expandedKeys, item => !_.includes(item, "blog"));
+                const query = new URLSearchParams(location.search);
+                if (_.isEmpty(eks)) {
+                  query.delete("ek");
+                } else {
+                  query.set("ek", eks.join("-"));
+                }
+                navigate(location.pathname + "?" + query.toString());
+              }}
+              expandedKeys={expandedKeys}
+              defaultExpandParent={true}
+        >
+          {recurTreeNodeRender(treeJson.children)}
+        </Tree>
+      </Box>
+      <Box>
+        {
+          _.map(fileList, item => {
+            return <Box key={item.id}>
+              <Link
+                to={item.node.data.fields.slug + location.search}>
+                {item.node.data.frontmatter.title}
+              </Link>
+            </Box>;
+          })
+        }
+      </Box>
+    </SplitPane>
   );
 };
 
@@ -197,7 +215,7 @@ class FolderConverter {
       if (item.node.type === "file") {
         fileList.push(item);
       }
-      this.recurToGetChildrenFileList(item);
+      this.recurToGetChildrenFileList(fileList, item);
     });
 
   }
