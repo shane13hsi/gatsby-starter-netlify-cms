@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Tree } from "antd";
-import { graphql, Link, StaticQuery } from "gatsby";
+import { graphql, StaticQuery } from "gatsby";
 import _ from "lodash";
 import { navigate } from "@reach/router";
 import { parse } from "query-string";
@@ -47,6 +47,7 @@ const NotableDirectoryTree = (props) => {
   root.parent = null;
   root.pid = null;
   let nodeMap = new Map();
+  // nodeMap
   nodeMap.set(root.id, root);
 
   _.forEach(_.reverse(flatData), ({ splitPath, fileAbsolutePath, data }, idx) => {
@@ -75,15 +76,27 @@ const NotableDirectoryTree = (props) => {
 
   const treeJson = TreeNodeModel.serialize(root);
 
+  function recurToRemoveFile(node) {
+    if (Array.isArray(node.children)) {
+      node.children = node.children.filter(
+        function(child) {
+          if (child.node.type === "file") {
+            return false;
+          } else {
+            recurToRemoveFile(child);
+            return true;
+          }
+        }
+      );
+    }
+  }
+
+  recurToRemoveFile(treeJson);
+
   function recurTreeNode(nodeList) {
     return _.map(nodeList, item => {
       if (_.isEmpty(item.children)) {
-        return <TreeNode title={
-          <Link
-            to={item.node.data.fields.slug + location.search}>
-            {item.node.data.frontmatter.title}
-          </Link>
-        } key={item.node.data.fields.slug}/>;
+        return <TreeNode title={item.node.title} key={item.id}/>;
       } else {
         return <TreeNode title={item.node.title} key={item.id}>
           {recurTreeNode(item.children)}
@@ -92,24 +105,42 @@ const NotableDirectoryTree = (props) => {
     });
   }
 
-  const slug = decodeURIComponent(location.pathname);
   const query = parse(location.search);
   let expandedKeys = [];
-  if (query.sk != null) {
-    expandedKeys = expandedKeys.concat(query.sk.split("-"));
+  if (query.ek != null) {
+    expandedKeys = expandedKeys.concat(query.ek.split("-"));
   }
-  expandedKeys.push(slug);
+
+  const slug = decodeURIComponent(location.pathname);
+  if (slug !== "/") {
+    expandedKeys.push(slug);
+  } else {
+    //
+  }
 
   return (
     <Tree showLine
-          onExpand={(selectedKeys, { expanded: bool, node }) => {
+          onSelect={(selectedKeys) => {
             const sks = _.filter(selectedKeys, item => !_.includes(item, "blog"));
             const query = new URLSearchParams(location.search);
-            query.set("sk", sks.join("-"));
+            if (_.isEmpty(sks)) {
+              query.delete("sk");
+            } else {
+              query.set("sk", sks[0]);
+            }
             navigate(location.pathname + "?" + query.toString());
           }}
-          expandedKeys={expandedKeys}
-          autoExpandParent={true}>
+          onExpand={(expandedKeys) => {
+            const eks = _.filter(expandedKeys, item => !_.includes(item, "blog"));
+            const query = new URLSearchParams(location.search);
+            if (_.isEmpty(eks)) {
+              query.delete("ek");
+            } else {
+              query.set("ek", eks.join("-"));
+            }
+            navigate(location.pathname + "?" + query.toString());
+          }}
+          expandedKeys={expandedKeys}>
       {recurTreeNode(treeJson.children)}
     </Tree>
   );
