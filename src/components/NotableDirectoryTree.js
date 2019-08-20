@@ -80,7 +80,7 @@ const NotableDirectoryTree = (props) => {
       if (_.isEmpty(item.children)) {
         return <TreeNode title={
           <Link
-            to={item.node.data.fields.slug}>
+            to={item.node.data.fields.slug + location.search}>
             {item.node.data.frontmatter.title}
           </Link>
         } key={item.node.data.fields.slug}/>;
@@ -102,9 +102,10 @@ const NotableDirectoryTree = (props) => {
 
   return (
     <Tree showLine
-          onExpand={selectedKeys => {
+          onExpand={(selectedKeys, { expanded: bool, node }) => {
+            const sks = _.filter(selectedKeys, item => !_.includes(item, "blog"));
             const query = new URLSearchParams(location.search);
-            query.set("sk", selectedKeys.join("-"));
+            query.set("sk", sks.join("-"));
             navigate(location.pathname + "?" + query.toString());
           }}
           expandedKeys={expandedKeys}
