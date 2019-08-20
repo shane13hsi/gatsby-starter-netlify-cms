@@ -49,11 +49,11 @@ const NotableDirectoryTree = (props) => {
   let nodeMap = new Map();
   nodeMap.set(root.id, root);
 
-  _.forEach(flatData, ({ splitPath, fileAbsolutePath, data }, idx) => {
+  _.forEach(_.reverse(flatData), ({ splitPath, fileAbsolutePath, data }, idx) => {
     _.forEach(splitPath, (item2, idx2) => {
       if (item2 !== "") { // 非根节点
         let tm = new TreeNodeModel();
-        tm.id = `${idx}.${idx2}`;
+        tm.id = `${item2}.${idx2}`;
         tm.node = { title: item2 };
         if (item2.indexOf(".md") > -1) {
           tm.node.type = "file";
@@ -61,7 +61,7 @@ const NotableDirectoryTree = (props) => {
         }
         if (nodeMap.get(tm.id) == null) {
           nodeMap.set(tm.id, tm);
-          let pid = splitPath[idx2 - 1] === "" ? "root" : `${idx}.${idx2 - 1}`;
+          let pid = splitPath[idx2 - 1] === "" ? "root" : `${splitPath[idx2 - 1]}.${idx2 - 1}`;
           tm.pid = pid;
           tm.parent = nodeMap.get(pid);
           if (tm.parent.children == null) {
