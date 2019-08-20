@@ -57,7 +57,7 @@ const NotableDirectoryTree = (props) => {
 
   return (
     <SplitPane split="vertical"
-               defaultSize={250}
+               defaultSize={200}
                minSize={200}
                maxSize={300}
                pane1Style={{
@@ -92,7 +92,10 @@ const NotableDirectoryTree = (props) => {
           {recurTreeNodeRender(treeJson.children)}
         </Tree>
       </TreeBoxWrapper>
-      <Box mt={"8px"}>
+      <Box style={{
+        height: "100vh",
+        overflow: "auto"
+      }}>
         {
           _.map(fileList, item => {
             return <Link key={item.id}
