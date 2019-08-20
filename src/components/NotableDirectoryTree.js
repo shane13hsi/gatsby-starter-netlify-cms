@@ -29,77 +29,88 @@ class TreeNodeModel {
   }
 }
 
-const NotableDirectoryTree = (props) => {
-  const { data, location } = props;
-
-  const flatData = _.map(data.allMarkdownRemark.edges, item => {
-    const path = _.get(item, "node.fileAbsolutePath");
-    return {
-      splitPath: path.split("blog")[1].split("/"),
-      fileAbsolutePath: path,
-      data: item.node
-    };
-  });
-
-  let root = new TreeNodeModel();
-  root.id = "root";
-  root.node = { title: "root", type: "dir" };
-  root.parent = null;
-  root.pid = null;
-  let nodeMap = new Map();
-  // nodeMap
-  nodeMap.set(root.id, root);
-
-  _.forEach(_.reverse(flatData), ({ splitPath, fileAbsolutePath, data }, idx) => {
-    _.forEach(splitPath, (item2, idx2) => {
-      if (item2 !== "") { // 非根节点
-        let tm = new TreeNodeModel();
-        tm.id = `${item2}.${idx2}`;
-        tm.node = { title: item2 };
-        if (item2.indexOf(".md") > -1) {
-          tm.node.type = "file";
-          tm.node.data = data;
-        }
-        if (nodeMap.get(tm.id) == null) {
-          nodeMap.set(tm.id, tm);
-          let pid = splitPath[idx2 - 1] === "" ? "root" : `${splitPath[idx2 - 1]}.${idx2 - 1}`;
-          tm.pid = pid;
-          tm.parent = nodeMap.get(pid);
-          if (tm.parent.children == null) {
-            tm.parent.children = [];
-          }
-          tm.parent.children.push(tm);
-        }
-      }
+class FolderConverter {
+  flatData(data) {
+    const flatData = _.map(data.allMarkdownRemark.edges, item => {
+      const path = _.get(item, "node.fileAbsolutePath");
+      return {
+        splitPath: path.split("blog")[1].split("/"),
+        fileAbsolutePath: path,
+        data: item.node
+      };
     });
-  });
+    return flatData;
+  }
 
-  const treeJson = TreeNodeModel.serialize(root);
+  generateNodeMap(flatData) {
+    let root = new TreeNodeModel();
+    root.id = "root";
+    root.node = { title: "root", type: "dir" };
+    root.parent = null;
+    root.pid = null;
+    let nodeMap = new Map();
+    // nodeMap
+    nodeMap.set(root.id, root);
 
-  function recurToRemoveFile(node) {
+    _.forEach(_.reverse(flatData), ({ splitPath, fileAbsolutePath, data }, idx) => {
+      _.forEach(splitPath, (item2, idx2) => {
+        if (item2 !== "") { // 非根节点
+          let tm = new TreeNodeModel();
+          tm.id = `${item2}.${idx2}`;
+          tm.node = { title: item2 };
+          if (item2.indexOf(".md") > -1) {
+            tm.node.type = "file";
+            tm.node.data = data;
+          }
+          if (nodeMap.get(tm.id) == null) {
+            nodeMap.set(tm.id, tm);
+            let pid = splitPath[idx2 - 1] === "" ? "root" : `${splitPath[idx2 - 1]}.${idx2 - 1}`;
+            tm.pid = pid;
+            tm.parent = nodeMap.get(pid);
+            if (tm.parent.children == null) {
+              tm.parent.children = [];
+            }
+            tm.parent.children.push(tm);
+          }
+        }
+      });
+    });
+
+    return nodeMap;
+  }
+
+  recurToRemoveFile(node) {
     if (Array.isArray(node.children)) {
       node.children = node.children.filter(
-        function(child) {
+        (child) => {
           if (child.node.type === "file") {
             return false;
           } else {
-            recurToRemoveFile(child);
+            this.recurToRemoveFile(child);
             return true;
           }
         }
       );
     }
   }
+}
 
-  recurToRemoveFile(treeJson);
+const NotableDirectoryTree = (props) => {
+  const { data, location } = props;
 
-  function recurTreeNode(nodeList) {
+  const folderConverter = new FolderConverter();
+  const flatData = folderConverter.flatData(data);
+  const nodeMap = folderConverter.generateNodeMap(flatData);
+  const treeJson = TreeNodeModel.serialize(nodeMap.get("root"));
+  folderConverter.recurToRemoveFile(treeJson);
+
+  function recurTreeNodeRender(nodeList) {
     return _.map(nodeList, item => {
       if (_.isEmpty(item.children)) {
         return <TreeNode title={item.node.title} key={item.id}/>;
       } else {
         return <TreeNode title={item.node.title} key={item.id}>
-          {recurTreeNode(item.children)}
+          {recurTreeNodeRender(item.children)}
         </TreeNode>;
       }
     });
@@ -140,8 +151,10 @@ const NotableDirectoryTree = (props) => {
             }
             navigate(location.pathname + "?" + query.toString());
           }}
-          expandedKeys={expandedKeys}>
-      {recurTreeNode(treeJson.children)}
+          expandedKeys={expandedKeys}
+          defaultExpandParent={true}
+    >
+      {recurTreeNodeRender(treeJson.children)}
     </Tree>
   );
 };
