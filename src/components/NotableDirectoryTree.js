@@ -2,6 +2,8 @@ import * as React from "react";
 import { Tree } from "antd";
 import { graphql, Link, StaticQuery } from "gatsby";
 import _ from "lodash";
+import { navigate } from "@reach/router";
+import { parse } from "query-string";
 
 const { TreeNode } = Tree;
 
@@ -51,7 +53,7 @@ const NotableDirectoryTree = (props) => {
     _.forEach(splitPath, (item2, idx2) => {
       if (item2 !== "") { // 非根节点
         let tm = new TreeNodeModel();
-        tm.id = `${item2}(${idx}.${idx2})`;
+        tm.id = `${idx}.${idx2}`;
         tm.node = { title: item2 };
         if (item2.indexOf(".md") > -1) {
           tm.node.type = "file";
@@ -59,7 +61,7 @@ const NotableDirectoryTree = (props) => {
         }
         if (nodeMap.get(tm.id) == null) {
           nodeMap.set(tm.id, tm);
-          let pid = splitPath[idx2 - 1] === "" ? "root" : `${splitPath[idx2 - 1]}(${idx}.${idx2 - 1})`;
+          let pid = splitPath[idx2 - 1] === "" ? "root" : `${idx}.${idx2 - 1}`;
           tm.pid = pid;
           tm.parent = nodeMap.get(pid);
           if (tm.parent.children == null) {
@@ -91,10 +93,21 @@ const NotableDirectoryTree = (props) => {
   }
 
   const slug = decodeURIComponent(location.pathname);
+  const query = parse(location.search);
+  let expandedKeys = [];
+  if (query.sk != null) {
+    expandedKeys = expandedKeys.concat(query.sk.split("-"));
+  }
+  expandedKeys.push(slug);
 
   return (
     <Tree showLine
-          defaultExpandedKeys={[slug]}
+          onExpand={selectedKeys => {
+            const query = new URLSearchParams(location.search);
+            query.set("sk", selectedKeys.join("-"));
+            navigate(location.pathname + "?" + query.toString());
+          }}
+          expandedKeys={expandedKeys}
           autoExpandParent={true}>
       {recurTreeNode(treeJson.children)}
     </Tree>

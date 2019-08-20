@@ -1,5 +1,6 @@
-import MailWidgetWrapper from './src/components/MailWidgetWrapper';
+import React from "react";
+import NotableWrapper from "./src/components/NotableWrapper";
 
 export const wrapPageElement = ({ element, props }) => (
-  <MailWidgetWrapper {...props}>{element}</MailWidgetWrapper>
+  <NotableWrapper {...props}>{element}</NotableWrapper>
 );

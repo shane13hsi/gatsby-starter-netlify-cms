@@ -7,7 +7,6 @@ import { HTMLContent } from "../components/Content";
 import Helmet from "react-helmet";
 import { BlogPostTemplate } from "./blog-post";
 import { graphql } from "gatsby";
-import PropTypes from "prop-types";
 
 const Notable = (props) => {
   const { markdownRemark: post } = props.data;
@@ -37,12 +36,6 @@ const Notable = (props) => {
       </Box>
     </SplitPane>
   </Wrapper>;
-};
-
-Notable.propTypes = {
-  data: PropTypes.shape({
-    markdownRemark: PropTypes.object
-  })
 };
 
 export default Notable;

@@ -43,7 +43,6 @@ exports.createPages = ({ actions, graphql }) => {
           id
         }
       });
-
     });
 
     // 创建默认首页
