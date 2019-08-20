@@ -24,7 +24,7 @@ export class FolderConverter {
     // nodeMap
     nodeMap.set(root.id, root);
 
-    _.forEach(_.reverse(flatData), ({ splitPath, fileAbsolutePath, data }, idx) => {
+    _.forEach(flatData, ({ splitPath, fileAbsolutePath, data }, idx) => {
       _.forEach(splitPath, (item2, idx2) => {
         if (item2 !== "") { // 非根节点
           let tm = new TreeNodeModel();
