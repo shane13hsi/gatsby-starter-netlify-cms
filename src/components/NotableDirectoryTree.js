@@ -1,11 +1,15 @@
 import * as React from "react";
-import { Tree } from "antd";
+import { Icon, Tree } from "antd";
 import { graphql, Link, StaticQuery } from "gatsby";
 import _ from "lodash";
 import { navigate } from "@reach/router";
 import { parse } from "query-string";
 import { Box } from "grid-styled";
 import SplitPane from "react-split-pane";
+import { FolderConverter } from "../services/FolderConverter";
+import { TreeNodeModel } from "../services/TreeNodeModel";
+import styled from "styled-components";
+import cx from "classnames";
 
 const { TreeNode } = Tree;
 
@@ -21,9 +25,10 @@ const NotableDirectoryTree = (props) => {
   function recurTreeNodeRender(nodeList) {
     return _.map(nodeList, item => {
       if (_.isEmpty(item.children)) {
-        return <TreeNode title={item.node.title} key={item.id}/>;
+        return <TreeNode icon={<Icon type="folder" style={{ color: "#fff" }}/>}
+                         title={item.node.title} key={item.id}/>;
       } else {
-        return <TreeNode title={item.node.title} key={item.id}>
+        return <TreeNode icon={<Icon type="folder" style={{ color: "#fff" }}/>} title={item.node.title} key={item.id}>
           {recurTreeNodeRender(item.children)}
         </TreeNode>;
       }
@@ -51,44 +56,51 @@ const NotableDirectoryTree = (props) => {
   }
 
   return (
-    <SplitPane split="vertical" minSize={250}>
-      <Box m={"12px 18px"}>
-        <Tree showLine
-              onSelect={(selectedKeys) => {
-                const sks = _.filter(selectedKeys, item => !_.includes(item, "blog"));
-                const query = new URLSearchParams(location.search);
-                if (_.isEmpty(sks)) {
-                  query.delete("sk");
-                } else {
-                  query.set("sk", sks[0]);
-                }
-                navigate(location.pathname + "?" + query.toString());
-              }}
-              onExpand={(expandedKeys) => {
-                const eks = _.filter(expandedKeys, item => !_.includes(item, "blog"));
-                const query = new URLSearchParams(location.search);
-                if (_.isEmpty(eks)) {
-                  query.delete("ek");
-                } else {
-                  query.set("ek", eks.join("-"));
-                }
-                navigate(location.pathname + "?" + query.toString());
-              }}
-              expandedKeys={expandedKeys}
-              defaultExpandParent={true}
+    <SplitPane split="vertical" minSize={250} pane1Style={{
+      background: "#20262B"
+    }}>
+      <TreeBoxWrapper m={"12px 18px"}>
+        <Tree
+          showIcon={true}
+          onSelect={(selectedKeys) => {
+            const sks = _.filter(selectedKeys, item => !_.includes(item, "blog"));
+            const query = new URLSearchParams(location.search);
+            if (_.isEmpty(sks)) {
+              query.delete("sk");
+            } else {
+              query.set("sk", sks[0]);
+            }
+            navigate(location.pathname + "?" + query.toString());
+          }}
+          onExpand={(expandedKeys) => {
+            const eks = _.filter(expandedKeys, item => !_.includes(item, "blog"));
+            const query = new URLSearchParams(location.search);
+            if (_.isEmpty(eks)) {
+              query.delete("ek");
+            } else {
+              query.set("ek", eks.join("-"));
+            }
+            navigate(location.pathname + "?" + query.toString());
+          }}
+          expandedKeys={expandedKeys}
+          defaultExpandParent={true}
         >
           {recurTreeNodeRender(treeJson.children)}
         </Tree>
-      </Box>
-      <Box>
+      </TreeBoxWrapper>
+      <Box mt={"8px"}>
         {
           _.map(fileList, item => {
-            return <Box key={item.id}>
-              <Link
-                to={item.node.data.fields.slug + location.search}>
+            return <Link key={item.id}
+                         to={item.node.data.fields.slug + location.search}>
+              <FileBox p={"8px 12px"}
+                       className={cx({
+                         selected: item.node.data.fields.slug === slug
+                       })}
+              >
                 {item.node.data.frontmatter.title}
-              </Link>
-            </Box>;
+              </FileBox>
+            </Link>;
           })
         }
       </Box>
@@ -120,104 +132,38 @@ export default (props) => (
   />
 )
 
-class TreeNodeModel {
-  id;
-  node;
-  children;
-  pid;
-  parent;
+const TreeBoxWrapper = styled(Box)`// styled
+  & {
+    .ant-tree-title {
+      color: #fff;
+    }
 
-  static serialize(o) {
-    if (o == null) return null;
-    const jsonString = JSON.stringify(o, function(key, value) {
-      if (key === "parent") {
-        return undefined;
-      } else if (key === "pid") {
-        return undefined;
-      } else {
-        return value;
-      }
-    });
-    return JSON.parse(jsonString);
-  }
-}
+    .ant-tree.ant-tree-show-line li span.ant-tree-switcher {
+      background: #20262B;
+      color: #fff;
+    }
 
-class FolderConverter {
-  flattenData(data) {
-    const flatData = _.map(data.allMarkdownRemark.edges, item => {
-      const path = _.get(item, "node.fileAbsolutePath");
-      return {
-        splitPath: path.split("blog")[1].split("/"),
-        fileAbsolutePath: path,
-        data: item.node
-      };
-    });
-    return flatData;
-  }
+    .ant-tree li .ant-tree-node-content-wrapper.ant-tree-node-selected,
+    .ant-tree li .ant-tree-node-content-wrapper:hover {
+      background: #13171A;
+    }
 
-  generateNodeMap(flatData) {
-    let root = new TreeNodeModel();
-    root.id = "root";
-    root.node = { title: "root", type: "dir" };
-    root.parent = null;
-    root.pid = null;
-    let nodeMap = new Map();
-    // nodeMap
-    nodeMap.set(root.id, root);
-
-    _.forEach(_.reverse(flatData), ({ splitPath, fileAbsolutePath, data }, idx) => {
-      _.forEach(splitPath, (item2, idx2) => {
-        if (item2 !== "") { // 非根节点
-          let tm = new TreeNodeModel();
-          tm.id = `${item2}.${idx2}`;
-          tm.node = { title: item2 };
-          if (item2.indexOf(".md") > -1) {
-            tm.node.type = "file";
-            tm.node.data = data;
-          }
-          if (nodeMap.get(tm.id) == null) {
-            nodeMap.set(tm.id, tm);
-            let pid = splitPath[idx2 - 1] === "" ? "root" : `${splitPath[idx2 - 1]}.${idx2 - 1}`;
-            tm.pid = pid;
-            tm.parent = nodeMap.get(pid);
-            if (tm.parent.children == null) {
-              tm.parent.children = [];
-            }
-            tm.parent.children.push(tm);
-          }
-        }
-      });
-    });
-
-    return nodeMap;
-  }
-
-  recurToRemoveFile(node) {
-    if (Array.isArray(node.children)) {
-      node.children = node.children.filter(
-        (child) => {
-          if (child.node.type === "file") {
-            return false;
-          } else {
-            this.recurToRemoveFile(child);
-            return true;
-          }
-        }
-      );
+    .ant-tree {
+      color: #fff;
     }
   }
+`;
 
-  recurToGetChildrenFileList(fileList, node) {
-    if (node == null) {
-      return;
+const FileBox = styled(Box)`// styled
+  & {
+    transition: all 0.3s;
+
+    &:hover {
+      background: #F5F5F5;
     }
-    _.forEach(node.children, item => {
-      if (item.node.type === "file") {
-        fileList.push(item);
-      }
-      this.recurToGetChildrenFileList(fileList, item);
-    });
 
+    &.selected {
+      background: #EBEBEB;
+    }
   }
-}
-
+`;
