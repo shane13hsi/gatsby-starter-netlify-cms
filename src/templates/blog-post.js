@@ -25,9 +25,7 @@ export const BlogPostTemplate = ({
       {helmet || ""}
       <Flex justifyContent={"center"} style={{ margin: "48px 24px" }}>
         <Box width={4 / 5}>
-          <Title>
-            {title}
-          </Title>
+
           <Paragraph>{description}</Paragraph>
 
           <PostContent content={content}/>
