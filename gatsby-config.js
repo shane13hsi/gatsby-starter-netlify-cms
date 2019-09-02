@@ -60,7 +60,17 @@ module.exports = {
       options: {
         plugins: [
           {
-            resolve: `gatsby-remark-prismjs`
+            resolve: `gatsby-remark-prismjs`,
+            options: {
+              classPrefix: "language-",
+              inlineCodeMarker: null,
+              aliases: {
+                sh: "bash"
+              },
+              showLineNumbers: true,
+              noInlineHighlight: false
+
+            }
           },
           {
             resolve: "gatsby-remark-relative-images",
