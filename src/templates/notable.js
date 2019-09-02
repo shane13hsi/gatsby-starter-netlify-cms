@@ -1,12 +1,13 @@
 import * as React from "react";
 import SplitPane from "react-split-pane";
 import styled from "styled-components";
-import { Box } from "grid-styled";
 import NotableDirectoryTree from "../components/NotableDirectoryTree";
 import { HTMLContent } from "../components/Content";
 import Helmet from "react-helmet";
 import { BlogPostTemplate } from "./blog-post";
 import { graphql } from "gatsby";
+import { Scrollbars } from "react-custom-scrollbars";
+import "../components/han.css";
 
 const Notable = (props) => {
   const { markdownRemark: post } = props.data;
@@ -14,9 +15,8 @@ const Notable = (props) => {
   return <Wrapper>
     <SplitPane split="vertical" defaultSize={500} minSize={500} maxSize={600}>
       <NotableDirectoryTree {...props}/>
-      <Box style={{
-        height: "100vh",
-        overflow: "auto"
+      <Scrollbars style={{
+        height: "100vh"
       }}>
         <BlogPostTemplate
           content={post.html}
@@ -34,7 +34,7 @@ const Notable = (props) => {
           tags={post.frontmatter.tags}
           title={post.frontmatter.title}
         />
-      </Box>
+      </Scrollbars>
     </SplitPane>
   </Wrapper>;
 };
