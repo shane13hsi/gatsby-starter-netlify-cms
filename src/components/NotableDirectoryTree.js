@@ -10,6 +10,7 @@ import { FolderConverter } from "../services/FolderConverter";
 import { TreeNodeModel } from "../services/TreeNodeModel";
 import styled from "styled-components";
 import cx from "classnames";
+import { Scrollbars } from "react-custom-scrollbars";
 
 const { TreeNode } = Tree;
 
@@ -92,10 +93,8 @@ const NotableDirectoryTree = (props) => {
           {recurTreeNodeRender(treeJson.children)}
         </Tree>
       </TreeBoxWrapper>
-      <Box style={{
-        height: "100vh",
-        overflow: "auto"
-      }}>
+
+      <Scrollbars style={{ height: "100vh" }}>
         {
           _.map(fileList, item => {
             return <Link key={item.id}
@@ -110,7 +109,7 @@ const NotableDirectoryTree = (props) => {
             </Link>;
           })
         }
-      </Box>
+      </Scrollbars>
     </SplitPane>
   );
 };

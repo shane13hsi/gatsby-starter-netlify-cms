@@ -29,6 +29,7 @@
     "parcel-bundler": "^1.9.4",
     "prop-types": "^15.6.0",
     "react": "^16.8.4",
+    "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.8.4",
     "react-helmet": "^5.2.0",
     "react-split-pane": "^0.1.87",
